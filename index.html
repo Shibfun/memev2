@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meme Token Launchpad - Shibarium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: linear-gradient(135deg, #1A1A1A, #2A2A2A); 
+            color: #fff; 
+            padding: 20px; 
+            min-height: 100vh; 
+            line-height: 1.6; 
+        }
+        .container { 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            padding: 25px; 
+            background: #252525; 
+            border-radius: 15px; 
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7); 
+        }
+        h1 { 
+            text-align: center; 
+            color: #F5A623; 
+            font-size: clamp(2em, 6vw, 3em); 
+            margin-bottom: 30px; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            text-shadow: 0 2px 5px rgba(245, 166, 35, 0.4); 
+        }
+        .section { 
+            background: #2E2E2E; 
+            padding: 20px; 
+            margin-bottom: 20px; 
+            border-radius: 10px; 
+            border: 2px solid #F5A623; 
+        }
+        h2 { 
+            color: #F5A623; 
+            font-size: clamp(1.2em, 4vw, 1.8em); 
+            margin-bottom: 15px; 
+            font-weight: 600; 
+        }
+        .button { 
+            background: #F5A623; 
+            color: #1A1A1A; 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 30px; 
+            font-weight: 600; 
+            font-size: 1em; 
+            cursor: pointer; 
+            transition: background 0.3s ease, transform 0.2s ease; 
+            margin: 5px; 
+        }
+        .button:hover { 
+            background: #E5941F; 
+            transform: scale(1.05); 
+        }
+        .button:disabled { 
+            background: #555; 
+            color: #999; 
+            cursor: not-allowed; 
+        }
+        input { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 10px 0; 
+            border: 2px solid #F5A623; 
+            border-radius: 8px; 
+            background: #333; 
+            color: #fff; 
+            font-size: 1em; 
+        }
+        input::placeholder { 
+            color: #888; 
+        }
+        .status { 
+            margin-top: 10px; 
+            font-size: 0.9em; 
+            color: #F5A623; 
+        }
+        .wallet-info { 
+            color: #F5A623; 
+            font-weight: 600; 
+            word-break: break-all; 
+        }
+        .token-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 15px; 
+        }
+        .token-table th, .token-table td { 
+            padding: 12px; 
+            text-align: left; 
+            border-bottom: 1px solid #F5A623; 
+        }
+        .token-table th { 
+            background: #333; 
+            color: #F5A623; 
+        }
+        .copy-btn { 
+            background: #3A3A3A; 
+            color: #F5A623; 
+            padding: 5px 10px; 
+            font-size: 0.8em; 
+            border-radius: 5px; 
+        }
+        .copy-btn:hover { 
+            background: #444; 
+        }
+        .loading { 
+            opacity: 0.7; 
+            pointer-events: none; 
+        }
+        .footer { 
+            text-align: center; 
+            margin-top: 30px; 
+            font-size: 0.9em; 
+            color: #666; 
+        }
+        .footer a { 
+            color: #F5A623; 
+            text-decoration: none; 
+        }
+        .footer a:hover { 
+            text-decoration: underline; 
+        }
+        .how-it-works { 
+            background: #2E2E2E; 
+            padding: 20px; 
+            border-radius: 10px; 
+            border: 2px solid #F5A623; 
+            margin-top: 20px; 
+        }
+        .how-it-works ul { 
+            list-style-type: disc; 
+            padding-left: 20px; 
+            margin-top: 10px; 
+        }
+        .how-it-works li { 
+            margin-bottom: 12px; 
+            font-size: 0.95em; 
+        }
+        .how-it-works .highlight { 
+            color: #F5A623; 
+            font-weight: 600; 
+        }
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .section, .how-it-works { padding: 15px; }
+            .button { width: 100%; padding: 10px; }
+            .token-table { display: block; overflow-x: auto; }
+            .token-table th, .token-table td { font-size: 0.8em; padding: 8px; }
+            .token-table tr { display: block; margin-bottom: 10px; border-bottom: 1px solid #F5A623; }
+            .token-table td { display: block; text-align: left; }
+            .token-table td button { width: 100%; margin: 5px 0; }
+            .how-it-works ul { padding-left: 15px; }
+            .how-it-works li { font-size: 0.9em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Meme Token Launchpad</h1>
+        <div class="section">
+            <h2>Connect to Shibarium</h2>
+            <button id="connectButton" class="button">Connect Wallet</button>
+            <p>Wallet: <span id="walletAddress" class="wallet-info">Not connected</span></p>
+            <div id="networkStatus" class="status">Click to connect...</div>
+        </div>
+        <div class="section" id="createTokenSection">
+            <h2>Create Meme Token</h2>
+            <input type="text" id="tokenName" placeholder="Token Name (e.g., DogeCoin)">
+            <input type="text" id="tokenSymbol" placeholder="Token Symbol (e.g., DOGE)">
+            <button id="createToken" class="button">Create Token</button>
+            <div id="createStatus" class="status"></div>
+        </div>
+        <div class="section" id="myTokensSection">
+            <h2>My Created Tokens</h2>
+            <button id="fetchMyTokens" class="button">Fetch My Tokens</button>
+            <table class="token-table">
+                <thead>
+                    <tr>
+                        <th>Token Address</th>
+                        <th>Name</th>
+                        <th>Symbol</th>
+                    </tr>
+                </thead>
+                <tbody id="tokensBody"></tbody>
+            </table>
+            <div id="tokensStatus" class="status"></div>
+        </div>
+        <div class="how-it-works">
+            <h2>How It Works?</h2>
+            <p>Launch your meme token on Shibarium with our Meme Token Launchpad! It’s simple and fast:</p>
+            <ul>
+                <li><strong>Connect Your Wallet</strong>: Use MetaMask to connect to Shibarium (chain ID: 109). Ensure you have enough <span class="highlight">BONE</span> for gas fees.</li>
+                <li><strong>Create Your Token</strong>: Enter a name (e.g., “ShibaRocket”) and symbol (e.g., “SHK”). Total supply is 1 quadrillion tokens, all minted to your wallet address.</li>
+                <li><strong>View Your Tokens</strong>: Fetch the latest 20 tokens you’ve created, including their addresses, names, and symbols.</li>
+                <li><strong>Fair & Secure</strong>: Built on Shibarium for low fees, with simple tokenomics and secure creation functions.</li>
+            </ul>
+        </div>
+        <div class="footer">
+            Powered by <a href="https://shibarium.shib.io/" target="_blank">Shibarium</a> | Meme Token Launchpad © 2025
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
+    <script>
+        let web3, accounts, memeFactoryContract;
+        const memeFactoryAddress = "0x5DA5f5cb407FEA9657e671250C29aFdb84fba2f";
+
+        const memeFactoryABI = [
+            {"inputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"symbol","type":"string"}],"name":"createToken","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"creator","type":"address"}],"name":"getLatestTokensByCreator","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"tokenAddress","type":"address"},{"indexed":true,"internalType":"address","name":"creator","type":"address"},{"indexed":false,"internalType":"string","name":"name","type":"string"},{"indexed":false,"internalType":"string","name":"symbol","type":"string"}],"name":"TokenCreated","type":"event"}
+        ];
+
+        const memeTokenABI = [
+            {"inputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"symbol","type":"string"},{"internalType":"address","name":"creator","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},
+            {"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"}
+        ];
+
+        const shibarium = {
+            chainId: 109,
+            name: 'Shibarium',
+            explorerUrl: 'https://shibariumscan.io',
+            rpcUrl: 'https://rpc.shibrpc.com'
+        };
+
+        async function connectWallet() {
+            const status = document.getElementById('networkStatus');
+            try {
+                if (!window.ethereum) {
+                    status.innerHTML = 'No wallet detected. Please install <a href="https://metamask.io" target="_blank">MetaMask</a>.';
+                    throw new Error("No wallet detected");
+                }
+                status.innerText = "Connecting...";
+                web3 = new Web3(window.ethereum);
+                accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                if (!accounts.length) {
+                    throw new Error("Please unlock your wallet or connect it.");
+                }
+                const chainId = await web3.eth.getChainId();
+                if (chainId !== 109) {
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: '0x6d' }]
+                        });
+                    } catch (switchError) {
+                        if (switchError.code === 4902) {
+                            await window.ethereum.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [{
+                                    chainId: '0x6d',
+                                    chainName: 'Shibarium',
+                                    nativeCurrency: { name: 'BONE', symbol: 'BONE', decimals: 18 },
+                                    rpcUrls: ['https://rpc.shibrpc.com'],
+                                    blockExplorerUrls: ['https://shibariumscan.io']
+                                }]
+                            });
+                        } else {
+                            throw switchError;
+                        }
+                    }
+                }
+                document.getElementById('walletAddress').innerText = `${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`;
+                memeFactoryContract = new web3.eth.Contract(memeFactoryABI, memeFactoryAddress);
+                status.innerText = "Connected to Shibarium";
+            } catch (error) {
+                console.error(error);
+                status.innerText = "Failed to connect: " + error.message;
+            }
+        }
+
+        async function createToken() {
+            const section = document.getElementById('createTokenSection');
+            const status = document.getElementById('createStatus');
+            const name = document.getElementById('tokenName').value.trim();
+            const symbol = document.getElementById('tokenSymbol').value.trim();
+            if (!name || !symbol) return alert("Please enter token name and symbol!");
+            if (!accounts) return alert("Please connect your wallet first!");
+            try {
+                section.classList.add('loading');
+                status.innerText = "Creating token...";
+                const tx = await memeFactoryContract.methods.createToken(name, symbol).send({ from: accounts[0] });
+                const tokenAddress = tx.events.TokenCreated.returnValues.tokenAddress;
+                status.innerHTML = `Token created successfully! Address: <a href="${shibarium.explorerUrl}/address/${tokenAddress}" target="_blank">${tokenAddress.slice(0, 6)}...${tokenAddress.slice(-4)}</a>`;
+                document.getElementById('tokenName').value = '';
+                document.getElementById('tokenSymbol').value = '';
+                fetchMyTokens();
+            } catch (error) {
+                console.error(error);
+                status.innerText = "Failed to create token: " + error.message;
+            } finally {
+                section.classList.remove('loading');
+            }
+        }
+
+        async function fetchMyTokens() {
+            if (!accounts) return alert("Please connect your wallet first!");
+            const section = document.getElementById('myTokensSection');
+            const status = document.getElementById('tokensStatus');
+            try {
+                section.classList.add('loading');
+                status.innerText = "Fetching your tokens...";
+                const tokens = await memeFactoryContract.methods.getLatestTokensByCreator(accounts[0]).call();
+                const tokensBody = document.getElementById('tokensBody');
+                tokensBody.innerHTML = '';
+                if (tokens.length === 0) {
+                    status.innerText = "No tokens created yet!";
+                    return;
+                }
+                for (const token of tokens) {
+                    const tokenContract = new web3.eth.Contract(memeTokenABI, token);
+                    const name = await tokenContract.methods.name().call();
+                    const symbol = await tokenContract.methods.symbol().call();
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            ${token.slice(0, 6)}...${token.slice(-4)}
+                            <button class="button copy-btn" onclick="copyToClipboard('${token}')">Copy</button>
+                        </td>
+                        <td>${name}</td>
+                        <td>${symbol}</td>
+                    `;
+                    tokensBody.appendChild(row);
+                }
+                status.innerText = "Tokens loaded successfully!";
+            } catch (error) {
+                console.error(error);
+                status.innerText = "Failed to fetch tokens: " + error.message;
+            } finally {
+                section.classList.remove('loading');
+            }
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Address copied to clipboard!");
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                alert("Failed to copy address!");
+            });
+        }
+
+        document.getElementById('connectButton').addEventListener('click', connectWallet);
+        document.getElementById('createToken').addEventListener('click', createToken);
+        document.getElementById('fetchMyTokens').addEventListener('click', fetchMyTokens);
+
+        window.addEventListener('load', () => {
+            if (!window.location.protocol.startsWith('http')) {
+                document.getElementById('networkStatus').innerHTML = 'Please run this page via a local server (e.g., "npx serve") to connect MetaMask.';
+            } else if (!window.ethereum) {
+                document.getElementById('networkStatus').innerHTML = 'No wallet detected. Please install <a href="https://metamask.io" target="_blank">MetaMask</a>.';
+            }
+        });
+    </script>
+</body>
+</html>
